@@ -1,0 +1,230 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: adf
+  labels:
+    istio-injection: enabled
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sender-configmap
+  namespace: adf
+data:
+  SERVER_PORT: "8080"
+  APPLICATION_NAME: ms_sender
+  SPRING_PROFILE_ACTIVE: dev
+  SECRET_RABBIT:
+  SECRET_RABBIT_DUAL:
+  CACHE_SECRETS_SIZE: "100"
+  CACHE_SECRETS_SECONDS: "300"
+  RABBITMQ_HOST: "hostname"
+  RABBITMQ_PORT: "5671"
+  RABBITMQ_USERNAME: user
+  RABBITMQ_PASSWORD: ""
+  RABBITMQ_SSL: "true"
+  RABBITMQ_VIRTUAL_HOST: /
+  APP_ASYNC_WITH_DLQ_RETRY: "true"
+  APP_ASYNC_MAX_RETRIES: "3"
+  APP_ASYNC_RETRY_DELAY: "10000"
+  CORS_ALLOWED_ORIGINS: "*"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sender-service
+  namespace: adf
+spec:
+  selector:
+    app: reactive-commons
+    pod: sender-pod
+  ports:
+    - name: http
+      targetPort: 8080
+      port: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sender-deployment
+  namespace: adf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: sender-pod
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: reactive-commons
+        pod: sender-pod
+        version: 0.0.1
+      annotations:
+        traffic.sidecar.istio.io/excludeInboundPorts: "8080"
+        fluentbit.io/exclude: "true"
+        prometheus.io/port: '8080'
+        prometheus.io/path: '/api/v1/sender/prometheus'
+        prometheus.io/scrape: 'true'
+        metrics.dynatrace.com/port: '8080'
+        metrics.dynatrace.com/path: '/api/v1/sender/metrics'
+        metrics.dynatrace.com/scrape: 'true'
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10101
+        runAsGroup: 10101
+        fsGroup: 65534
+      containers:
+        - name: sender-container
+          image: ms_rabbit_sender-0.0.1
+          resources:
+            requests:
+              memory: "1000Mi"
+              cpu: "500m"
+            limits:
+              memory: "1000Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+          securityContext:
+            privileged: false
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - all
+            seccompProfile:
+              type: RuntimeDefault
+          envFrom:
+            - configMapRef:
+                name: sender-configmap
+          volumeMounts:
+            - mountPath: /files
+              name: files-volume
+          startupProbe:
+            httpGet:
+              path: /api/v1/sender/health/readiness
+              scheme: HTTP
+              port: 8080
+              httpHeaders:
+                - name: Accept
+                  value: application/json
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 20
+          livenessProbe:
+            httpGet:
+              path: /api/v1/sender/health/liveness
+              scheme: HTTP
+              port: 8080
+              httpHeaders:
+                - name: Accept
+                  value: application/json
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /api/v1/sender/health/readiness
+              scheme: HTTP
+              port: 8080
+              httpHeaders:
+                - name: Accept
+                  value: application/json
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+      volumes:
+        - name: files-volume
+          emptyDir: { }
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              pod: sender-pod
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              pod: sender-pod
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: sender-hpa
+  namespace: adf
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sender-deployment
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 90
+status:
+  currentReplicas: 1
+  desiredReplicas: 1
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: reactive-commons-gateway
+  namespace: adf
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+    - port:
+        number: 80
+        name: container-port
+        protocol: HTTP
+      hosts:
+        - my-domain.com
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: sender-vs
+  namespace: adf
+spec:
+  hosts:
+    - my-domain.com
+  gateways:
+    - reactive-commons-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /api/v1/sender
+      # rewrite:
+        # uri: "/api/v1/sender"
+      route:
+        - destination:
+            host: sender-service
+            port:
+              number: 8080
