@@ -1,0 +1,37 @@
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+    implementation project(':reactive-web')
+    testImplementation 'com.tngtech.archunit:archunit:1.4.1'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation project(':model')
+    implementation project(':usecase')
+    implementation project(':async-event-bus')
+    implementation project(':async-event-handler')
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'software.amazon.awssdk:secretsmanager'
+    implementation "com.github.bancolombia:aws-secrets-manager-async:${secretsVersion}"
+    implementation "org.reactivecommons:async-commons-rabbit-starter:${asyncCommonsRabbitVersion}"
+    runtimeOnly('org.springframework.boot:spring-boot-devtools')
+    modules {
+        module("org.springframework.boot:spring-boot-starter-logging") {
+            replacedBy("org.springframework.boot:spring-boot-starter-log4j2", "Use Log4j2 instead of Logback")
+        }
+    }
+}
+
+tasks.register('explodedJar', Copy) {
+    with jar
+    into layout.buildDirectory.dir("exploded")
+}
+
+jar {
+    // To disable the *-plain.jar
+    enabled = false
+}
+
+bootJar {
+    // Sets output jar name
+    archiveFileName = "${project.getParent().getName()}.${archiveExtension.get()}"
+}
