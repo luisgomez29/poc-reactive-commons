@@ -1,0 +1,56 @@
+server:
+  port: "${SERVER_PORT}"
+
+springdoc:
+  version: 1
+spring:
+  webflux:
+    base-path: "/api/v1/listener"
+  application:
+    name: "${APPLICATION_NAME}"
+  devtools:
+    add-properties: false
+  profiles:
+    include: "${SPRING_PROFILE_ACTIVE:local}"
+
+management:
+  endpoint:
+    health:
+      enabled: true
+      show-details: "never"
+      probes:
+        enabled: true
+    prometheus:
+      enabled: true
+    metrics:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "health, prometheus, metrics"
+      base-path: "/"
+      path-mapping:
+        health: "health"
+        liveness: "liveness"
+        readiness: "readiness"
+
+adapters:
+  secrets-manager:
+    rabbit: "${SECRET-RABBIT}"
+    rabbit-dual: "${SECRET_RABBIT_DUAL}"
+    endpoint: "${SECRET_ENDPOINT}"
+    cache-size: "${CACHE_SECRETS_SIZE}"
+    cache-time: "${CACHE_SECRETS_SECONDS}"
+  rabbitmq:
+    connectionProperties:
+      host: "${RABBITMQ_HOST}"
+      port: "${RABBITMQ_PORT}"
+      username: "${RABBITMQ_USERNAME}"
+      password: "${RABBITMQ_PASSWORD}"
+      ssl: "${RABBITMQ_SSL}"
+      virtual-host: "${RABBITMQ_VIRTUAL_HOST}"
+    withDLQRetry: "${APP_ASYNC_WITH_DLQ_RETRY}"
+    maxRetries: "${APP_ASYNC_MAX_RETRIES}"
+    retryDelay: "${APP_ASYNC_RETRY_DELAY}"
+cors:
+  allowed-origins: "http://localhost:4200,http://localhost:8080"

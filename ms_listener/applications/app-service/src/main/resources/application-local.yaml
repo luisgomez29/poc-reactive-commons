@@ -1,0 +1,52 @@
+server:
+  port: 8081
+
+springdoc:
+  version: 1
+spring:
+  webflux:
+    base-path: "/api/v1/listener"
+  application:
+    name: ms_listener
+  devtools:
+    add-properties: false
+
+management:
+  endpoint:
+    health:
+      enabled: true
+      show-details: "never"
+      probes:
+        enabled: true
+    prometheus:
+      enabled: true
+    metrics:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "health, prometheus, metrics"
+      base-path: "/"
+      path-mapping:
+        health: "health"
+        liveness: "liveness"
+        readiness: "readiness"
+
+adapters:
+  secrets-manager:
+    rabbit: secretrabbit-CNX
+    rabbit-dual: secretrabbit-CNX
+    cache-size: 300
+    cache-time: 20
+    endpoint: "http://localhost:4566"
+  rabbitmq:
+    connection-properties:
+      host: localhost
+      port: 5672
+      username: guest
+      password: guest
+      ssl: false
+      virtual-host: /
+    withDLQRetry: true
+    maxRetries: 5
+    retryDelay: 60
