@@ -14,7 +14,7 @@ public class EventsHandler {
 
 
     public Mono<Void> handleEventA(DomainEvent<Object/*change for proper model*/> event) {
-        log.log(Level.INFO, "Event received: {0} -> {1}", new Object[]{event.getName(), event.getData()}); // TODO: Remove this line
+        log.log(Level.INFO, "Event received: {0} -> {1}", new Object[]{event.getName(), event.getData()});
 //        return sampleUseCase.doSomething(event.getData());
         return Mono.empty();
     }

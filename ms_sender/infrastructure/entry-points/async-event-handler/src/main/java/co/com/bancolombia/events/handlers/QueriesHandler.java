@@ -26,8 +26,6 @@ public class QueriesHandler {
     public Mono<MessagePush> handleQueryB(MessagePush messagePush) {
         log.log(Level.INFO, "Query received= " + messagePush);
         return Mono.just(messagePush);
-//        return pushUseCase.sendPush(messagePush)
-//                .thenReturn(messagePush);
     }
 
 }

@@ -15,7 +15,7 @@ public class CommandsHandler {
 //    private final SampleUseCase sampleUseCase;
 
     public Mono<Void> handleCommandA(Command<Object/*change for proper model*/> command) {
-        log.log(Level.INFO, "Command received: {0} -> {1}", new Object[]{command.getName(), command.getData()}); // TODO: Remove this line
+        log.log(Level.INFO, "Command received: {0} -> {1}", new Object[]{command.getName(), command.getData()});
 //        return sampleUseCase.doSomething(command.getData());
         return Mono.empty();
     }
