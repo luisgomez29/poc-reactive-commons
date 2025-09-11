@@ -1,0 +1,45 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    tls_config:
+      insecure_skip_verify: true
+  
+  - job_name: 'listener-eks'
+    metrics_path: '/api/v1/listener/prometheus'
+    scheme: 'http'
+    static_configs:
+      - targets: ['https://domain-name.com']
+    tls_config:
+      insecure_skip_verify: true
+  
+  - job_name: 'sender-eks'
+    metrics_path: '/api/v1/sender/prometheus'
+    scheme: 'http'
+    static_configs:
+      - targets: ['https://domain-name.com']
+    tls_config:
+      insecure_skip_verify: true
+
+  # - job_name: 'Channel-Sender'
+  #   metrics_path: '/metrics'
+  #   static_configs:
+  #     - targets: ['my-ip:9568']
+
+  - job_name: 'listener'
+    metrics_path: '/api/v1/listener/prometheus'
+    static_configs:
+      - targets: ['listener-service:8080']
+    tls_config:
+      insecure_skip_verify: true
+
+  - job_name: 'sender'
+    metrics_path: '/api/v1/sender/prometheus'
+    static_configs:
+      - targets: ['sender-service:8080']
+    tls_config:
+      insecure_skip_verify: true
+      
