@@ -1,0 +1,67 @@
+services:
+  listener-service:
+    build:
+      context: ../ms_listener/deployment/docker
+      dockerfile: Dockerfile
+    container_name: listener-service
+    ports:
+      - "8080:8080"
+    environment:
+      SERVER_PORT: 8080
+      APPLICATION_NAME: ms_listener
+      SPRING_PROFILE_ACTIVE: dev
+      SECRET_RABBIT: secretrabbit-CNX
+      SECRET_RABBIT_DUAL: secretrabbit-CNX
+      CACHE_SECRETS_SIZE: 100
+      CACHE_SECRETS_SECONDS: 300
+      RABBITMQ_HOST: rabbitmq # Service name for RabbitMQ in docker-compose
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_SSL: false
+      RABBITMQ_VIRTUAL_HOST: /
+      APP_ASYNC_WITH_DLQ_RETRY: true
+      APP_ASYNC_MAX_RETRIES: 3
+      APP_ASYNC_RETRY_DELAY: 5000
+      CORS_ALLOWED_ORIGINS: "*"
+      SECRET_ENDPOINT: http://localstack-container:4566 # Service name for LocalStack in docker-compose
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: "test"
+    networks:
+      - shared-net
+
+  sender-service:
+    build:
+      context: ../ms_sender/deployment/docker/
+      dockerfile: Dockerfile
+    container_name: sender-service
+    ports:
+      - "8081:8080"
+    environment:
+      SERVER_PORT: 8080
+      APPLICATION_NAME: ms_sender
+      SPRING_PROFILE_ACTIVE: dev
+      SECRET_RABBIT: secretrabbit-CNX
+      SECRET_RABBIT_DUAL: secretrabbit-CNX
+      CACHE_SECRETS_SIZE: 100
+      CACHE_SECRETS_SECONDS: 300
+      RABBITMQ_HOST: rabbitmq # Service name for RabbitMQ in docker-compose
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_SSL: false
+      RABBITMQ_VIRTUAL_HOST: /
+      APP_ASYNC_WITH_DLQ_RETRY: true
+      APP_ASYNC_MAX_RETRIES: 3
+      APP_ASYNC_RETRY_DELAY: 5000
+      CORS_ALLOWED_ORIGINS: "*"
+      SECRET_ENDPOINT: http://host.docker.internal:4566  # Using host.docker.internal to access LocalStack
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: "test"
+    networks:
+      - shared-net
+
+networks:
+  shared-net:
+    name: shared-network # Actual name of the network created with 'docker network create'
+    external: true       # This is CRUCIAL. Indicates that the network is external.
