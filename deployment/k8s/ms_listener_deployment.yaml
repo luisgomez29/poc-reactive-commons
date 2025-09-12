@@ -86,6 +86,7 @@ spec:
       containers:
         - name: listener-container
           image: ms_rabbit_listener-0.0.1
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "1000Mi"
@@ -132,7 +133,7 @@ spec:
                 - name: Accept
                   value: application/json
             periodSeconds: 10
-            timeoutSeconds: 5
+            timeoutSeconds: 10
             successThreshold: 1
             failureThreshold: 1
           readinessProbe:

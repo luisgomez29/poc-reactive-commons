@@ -7,8 +7,7 @@ buildscript {
 		pitestVersion = '1.19.0-rc.1'
         lombokVersion = '1.18.38'
         awsSdkVersion = '2.32.15'
-//        asyncCommonsRabbitVersion = '5.6.2-beta.1'
-        asyncCommonsRabbitVersion = '5.6.2'
+        asyncCommonsRabbitVersion = '5.6.2-beta.1'
         secretsVersion = '4.4.34'
 	}
 }
