@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile({"local", "dev"})
+@Profile("dev")
 public class RabbitMQConfigHelperDev {
 
     private final RabbitMQConnectionPropertiesDev connectionProperties;

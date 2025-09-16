@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
-@Profile("qa")
 @Configuration
+@Profile("local")
 public class RabbitMQConfigHelper {
 
     private final RabbitMQConnectionProperties propertiesPush;

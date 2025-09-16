@@ -13,7 +13,7 @@ import software.amazon.awssdk.regions.Region;
 
 
 @Log4j2
-@Profile("qa")
+@Profile("local")
 @Configuration
 @RequiredArgsConstructor
 public class SecretsConfig {

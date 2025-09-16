@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
-@Profile("qa")
 @Configuration
+@Profile("local")
 public class RabbitMQConfigHelper {
 
     private final RabbitMQConnectionProperties propertiesPush;
@@ -57,16 +57,16 @@ public class RabbitMQConfigHelper {
                         .withDLQRetry(withDLQRetry)
                         .maxRetries(maxRetries)
                         .retryDelay(retryDelay)
-                        .listenReplies(Boolean.TRUE)
+                        .listenReplies(Boolean.FALSE)
                         .build())
-//                .withDomain("push", AsyncProps.builder()
-//                        .connectionProperties(propertiesReceive)
-//                        .withDLQRetry(Boolean.TRUE)
-//                        .maxRetries(maxRetries)
-//                        .retryDelay(retryDelay)
-//                        .listenReplies(Boolean.TRUE)
-////                        .queueType("quorum")
-//                        .build())
+                .withDomain("push", AsyncProps.builder()
+                        .connectionProperties(propertiesReceive)
+                        .withDLQRetry(Boolean.TRUE)
+                        .maxRetries(maxRetries)
+                        .retryDelay(retryDelay)
+                        .listenReplies(Boolean.FALSE)
+//                        .queueType("quorum")
+                        .build())
                 .build();
     }
 }
