@@ -57,7 +57,7 @@ public class RabbitMQConfigHelper {
                         .withDLQRetry(withDLQRetry)
                         .maxRetries(maxRetries)
                         .retryDelay(retryDelay)
-                        .listenReplies(Boolean.FALSE)
+                        .listenReplies(Boolean.TRUE)
                         .build())
                 .withDomain("push", AsyncProps.builder()
                         .connectionProperties(propertiesReceive)

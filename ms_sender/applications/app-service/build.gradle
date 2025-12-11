@@ -1,9 +1,9 @@
 apply plugin: 'org.springframework.boot'
 
 dependencies {
+	testImplementation 'tools.jackson.core:jackson-databind'
     implementation project(':reactive-web')
     testImplementation 'com.tngtech.archunit:archunit:1.4.1'
-    testImplementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation project(':model')
     implementation project(':usecase')
     implementation project(':async-event-bus')

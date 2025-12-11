@@ -1,13 +1,15 @@
 package co.com.bancolombia.events.handlers;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.reactivecommons.api.domain.DomainEvent;
 import org.reactivecommons.async.impl.config.annotations.EnableEventListeners;
 import reactor.core.publisher.Mono;
-import lombok.extern.java.Log;
+
 import java.util.logging.Level;
+
 @Log
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EnableEventListeners
 public class EventsHandler {
 //    private final SampleUseCase sampleUseCase;

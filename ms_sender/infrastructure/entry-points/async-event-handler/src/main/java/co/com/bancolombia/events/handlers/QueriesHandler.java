@@ -2,7 +2,7 @@ package co.com.bancolombia.events.handlers;
 
 import co.com.bancolombia.model.push.MessagePush;
 import co.com.bancolombia.usecase.PushUseCase;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.reactivecommons.async.api.From;
 import org.reactivecommons.async.impl.config.annotations.EnableQueryListeners;
@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 import java.util.logging.Level;
 
 @Log
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EnableQueryListeners
 public class QueriesHandler {
     private final PushUseCase pushUseCase;

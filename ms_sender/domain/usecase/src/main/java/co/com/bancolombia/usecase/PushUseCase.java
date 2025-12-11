@@ -22,6 +22,7 @@ public class PushUseCase {
     public Mono<MessagePush> sendPush(MessagePush messagePush) {
         return commandsGateway.sendPush(messagePush)
                 .flatMap(commandsGateway::sendPushWitError)
+                .flatMap(commandsGateway::sendPushCloud)
                 .flatMap(eventsGateway::emit)
                 .flatMap(queriesGateway::sendQuery);
 //                .thenReturn(messagePush);

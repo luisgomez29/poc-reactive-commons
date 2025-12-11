@@ -44,6 +44,9 @@ subprojects {
         implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
     }
 
+    // TODO: Revome
+    ext["rabbit-amqp-client.version"] = '5.28.0'
+
     tasks.withType(Test).configureEach {
         if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_13)) {
             jvmArgs += [
@@ -58,7 +61,7 @@ subprojects {
         targetClasses = ['co.com.bancolombia.*']
         excludedClasses = []
         excludedTestClasses = []
-        pitestVersion = '1.21.0'
+        pitestVersion = '1.22.0'
         verbose = false
         outputFormats = ['XML', 'HTML']
         threads = 8
@@ -129,7 +132,7 @@ pitestReportAggregate {
 }
 
 tasks.named('wrapper') {
-    gradleVersion = '9.1.0'
-    distributionSha256Sum = "a17ddd85a26b6a7f5ddb71ff8b05fc5104c0202c6e64782429790c933686c806"
+    gradleVersion = '9.2.1'
+    distributionSha256Sum = "72f44c9f8ebcb1af43838f45ee5c4aa9c5444898b3468ab3f4af7b6076c5bc3f"
     validateDistributionUrl = true
 }

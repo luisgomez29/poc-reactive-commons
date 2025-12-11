@@ -1,6 +1,6 @@
 package co.com.bancolombia.events.handlers;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.reactivecommons.api.domain.Command;
 import org.reactivecommons.async.impl.config.annotations.EnableCommandListeners;
@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 import java.util.logging.Level;
 
 @Log
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EnableCommandListeners
 public class CommandsHandler {
 //    private final SampleUseCase sampleUseCase;
