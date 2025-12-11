@@ -17,6 +17,7 @@ public class HandlerRegistryConfiguration {
                 .listenEvent("event.push", events::handleEventA, MessagePush.class)
                 .handleCommand("command.push", commands::handleCommandA, MessagePush.class)
                 .handleCommand("command.push.error", commands::handleCommandError, MessagePush.class)
+                .handleCloudEventCommand("command.push.cloud", commands::handleCloudCommand)
                 .serveQuery("query.push", queries::handleQueryA, MessagePush.class);
     }
 }

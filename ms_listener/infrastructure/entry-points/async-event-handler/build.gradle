@@ -3,4 +3,5 @@ dependencies {
     implementation project(':usecase')
     implementation "org.reactivecommons:async-commons-rabbit-starter:${asyncCommonsRabbitVersion}"
     implementation 'org.springframework:spring-context'
+    implementation 'io.cloudevents:cloudevents-core:4.0.1'
 }

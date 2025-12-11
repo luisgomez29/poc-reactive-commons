@@ -1,14 +1,14 @@
 buildscript {
     ext {
-        cleanArchitectureVersion = '3.26.2'
-        springBootVersion = '3.5.6'
-        sonarVersion = '7.0.0.6105'
+        cleanArchitectureVersion = '3.28.0'
+        springBootVersion = '4.0.0'
+        sonarVersion = '7.2.0.6526'
         jacocoVersion = '0.8.14'
         pitestVersion = '1.19.0-rc.2'
         lombokVersion = '1.18.42'
-        awsSdkVersion = '2.35.10'
-        asyncCommonsRabbitVersion = '6.0.0'
-        secretsVersion = '4.4.35'
+        awsSdkVersion = '2.40.4'
+        asyncCommonsRabbitVersion = '7.0.0'
+        secretsVersion = '4.5.0'
     }
 }
 
