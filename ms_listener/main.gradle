@@ -17,7 +17,6 @@ subprojects {
 
     compileJava.dependsOn validateStructure
 
-
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(21)
@@ -70,6 +69,7 @@ subprojects {
         threads = 8
         exportLineCoverage = true
         useClasspathFile = true
+        withHistory = true
         timestampedReports = false
         //mutators = ['STRONGER', 'DEFAULTS']
         fileExtensionsToFilter.addAll('xml', 'orbit')
