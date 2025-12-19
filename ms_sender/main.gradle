@@ -67,6 +67,7 @@ subprojects {
         threads = 8
         exportLineCoverage = true
         useClasspathFile = true
+        withHistory = true
         timestampedReports = false
         //mutators = ['STRONGER', 'DEFAULTS']
         fileExtensionsToFilter.addAll('xml', 'orbit')
