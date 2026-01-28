@@ -33,7 +33,7 @@ subprojects {
         implementation 'io.projectreactor:reactor-core'
         implementation 'io.projectreactor.addons:reactor-extra'
 
-        testImplementation 'io.projectreactor.tools:blockhound-junit-platform:1.0.15.RELEASE'
+        testImplementation 'io.projectreactor.tools:blockhound-junit-platform:1.0.16.RELEASE'
 
         testImplementation 'io.projectreactor:reactor-test'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -135,7 +135,7 @@ pitestReportAggregate {
 }
 
 tasks.named('wrapper') {
-    gradleVersion = '9.2.1'
-    distributionSha256Sum = "72f44c9f8ebcb1af43838f45ee5c4aa9c5444898b3468ab3f4af7b6076c5bc3f"
+    gradleVersion = '9.3.0'
+    distributionSha256Sum = "0d585f69da091fc5b2beced877feab55a3064d43b8a1d46aeb07996b0915e0e0"
     validateDistributionUrl = true
 }
