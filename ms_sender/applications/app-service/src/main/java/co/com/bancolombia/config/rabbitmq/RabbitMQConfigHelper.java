@@ -1,5 +1,9 @@
 package co.com.bancolombia.config.rabbitmq;
 
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.impl.DefaultExceptionHandler;
+import lombok.extern.log4j.Log4j2;
+import org.reactivecommons.async.rabbit.ConnectionFactoryCustomizer;
 import org.reactivecommons.async.rabbit.config.RabbitProperties;
 import org.reactivecommons.async.rabbit.config.props.AsyncProps;
 import org.reactivecommons.async.rabbit.config.props.AsyncRabbitPropsDomainProperties;
@@ -12,6 +16,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile("local")
+@Log4j2
 public class RabbitMQConfigHelper {
 
     private final RabbitMQConnectionProperties propertiesPush;
@@ -30,6 +35,24 @@ public class RabbitMQConfigHelper {
         this.withDLQRetry = withDLQRetry;
         this.maxRetries = maxRetries;
         this.retryDelay = retryDelay;
+    }
+
+    static class MyCustomExceptionHandler extends DefaultExceptionHandler {
+        @Override
+        public void handleConnectionRecoveryException(Connection conn, Throwable exception) {
+            log.error("Error in connection: {}", exception.getMessage());
+            log.info("Updating credentials...");
+        }
+    }
+
+    @Bean
+    @Primary
+    public ConnectionFactoryCustomizer connectionFactoryCustomizer() {
+        return (connectionFactory, asyncProps) -> {
+            log.info("Customizing ConnectionFactory for domain: {}", asyncProps.getDomain());
+            connectionFactory.setExceptionHandler(new MyCustomExceptionHandler());
+            return connectionFactory;
+        };
     }
 
     @Bean
