@@ -61,7 +61,7 @@ subprojects {
         targetClasses = ['co.com.bancolombia.*']
         excludedClasses = []
         excludedTestClasses = []
-        pitestVersion = '1.22.0'
+        pitestVersion = '1.22.1'
         verbose = false
         outputFormats = ['XML', 'HTML']
         threads = 8
@@ -113,13 +113,18 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 pitestReportAggregate {
+    def rootReportDir = layout.buildDirectory.dir("reports/pitest")
+    def subprojectReports = subprojects.collect { subproject ->
+        subproject.layout.buildDirectory.file("reports/pitest/mutations.xml")
+    }
+
     doLast {
-        def reportDir = layout.buildDirectory.dir("reports/pitest").get().asFile
+        def reportDir = rootReportDir.get().asFile
         def consolidatedReport = new File(reportDir, 'mutations.xml')
         consolidatedReport.withWriter { writer ->
             writer.write("<mutations>\n")
-            subprojects.each { subproject ->
-                def xmlReport = subproject.layout.buildDirectory.file("reports/pitest/mutations.xml").get().asFile
+            subprojectReports.each { reportProvider ->
+                def xmlReport = reportProvider.get().asFile
                 if (xmlReport.exists()) {
                     def xmlContent = xmlReport.text
                     xmlContent = xmlContent.replaceAll("<\\?xml[^>]*>", "")
@@ -133,7 +138,7 @@ pitestReportAggregate {
 }
 
 tasks.named('wrapper') {
-    gradleVersion = '9.3.0'
-    distributionSha256Sum = "0d585f69da091fc5b2beced877feab55a3064d43b8a1d46aeb07996b0915e0e0"
+    gradleVersion = '9.4.1'
+    distributionSha256Sum = "2ab2958f2a1e51120c326cad6f385153bb11ee93b3c216c5fccebfdfbb7ec6cb"
     validateDistributionUrl = true
 }
