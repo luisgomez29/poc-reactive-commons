@@ -1,0 +1,50 @@
+server:
+  port: 8082
+
+springdoc:
+  version: 1
+spring:
+  webflux:
+    base-path: "/api/v1/sender"
+  application:
+    name: ms_sender_kafka
+  devtools:
+    add-properties: false
+
+logging:
+  level:
+    root: INFO
+
+management:
+  endpoint:
+    health:
+      enabled: true
+      show-details: "never"
+      probes:
+        enabled: true
+    prometheus:
+      enabled: true
+    metrics:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "health, prometheus, metrics"
+      base-path: "/"
+      path-mapping:
+        health: "health"
+        liveness: "liveness"
+        readiness: "readiness"
+
+adapters:
+  secrets-manager:
+    rabbit: gestion-envio-local-secretrabbit-CNX
+    rabbit-dual: gestion-envio-logs-local-secretrabbit-CNX
+    cache-size: 300
+    cache-time: 20
+    endpoint: "http://localhost:4566"
+  kafka:
+    withDLQRetry: true
+    maxRetries: 5
+    retryDelay: 60
+
