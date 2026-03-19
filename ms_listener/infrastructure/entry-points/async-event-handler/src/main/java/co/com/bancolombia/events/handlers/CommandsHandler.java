@@ -27,7 +27,7 @@ public class CommandsHandler {
     }
 
     public Mono<Void> handleCommandError(Command<MessagePush> command) {
-        log.log(Level.INFO, "Command received: {0} -> {1}", new Object[]{command.getName(), command.getData()});
+        log.log(Level.INFO, "Command Error received: {0} -> {1}", new Object[]{command.getName(), command.getData()});
         return Mono.error(new Throwable("Error in command"));
     }
 

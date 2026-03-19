@@ -52,5 +52,5 @@ adapters:
       ssl: false
       virtual-host: /
     withDLQRetry: true
-    maxRetries: 5
-    retryDelay: 60
+    maxRetries: 2
+    retryDelay: 60000
