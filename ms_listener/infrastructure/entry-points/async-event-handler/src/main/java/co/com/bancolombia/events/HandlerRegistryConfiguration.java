@@ -15,6 +15,7 @@ public class HandlerRegistryConfiguration {
     public HandlerRegistry handlerRegistry(CommandsHandler commands, EventsHandler events, QueriesHandler queries) {
         return HandlerRegistry.register()
                 .listenEvent("event.push", events::handleEventA, MessagePush.class)
+                .listenNotificationRawEvent("some.broadcast.event.name", events::handleRawEventOrNotification)
                 .handleCommand("command.push", commands::handleCommandA, MessagePush.class)
                 .handleCommand("command.push.error", commands::handleCommandError, MessagePush.class)
                 .handleCloudEventCommand("command.push.cloud", commands::handleCloudCommand)
