@@ -49,7 +49,7 @@ public class RabbitMQConfigHelper {
     @Primary
     public ConnectionFactoryCustomizer connectionFactoryCustomizer() {
         return (connectionFactory, asyncProps) -> {
-            log.info("Customizing ConnectionFactory for domain: {}", asyncProps.getDomain());
+            log.info("Customizing ConnectionFactory for domain: {}", asyncProps.getConnectionProperties().getHost());
             connectionFactory.setExceptionHandler(new MyCustomExceptionHandler());
             return connectionFactory;
         };

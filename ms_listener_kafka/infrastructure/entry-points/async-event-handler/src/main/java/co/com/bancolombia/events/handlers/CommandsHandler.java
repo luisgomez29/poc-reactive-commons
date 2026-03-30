@@ -12,7 +12,7 @@ import java.util.logging.Level;
 
 @Log
 @RequiredArgsConstructor
-//@EnableCommandListeners
+@EnableCommandListeners
 public class CommandsHandler {
 //    private final SampleUseCase sampleUseCase;
 
@@ -28,8 +28,8 @@ public class CommandsHandler {
 
     public Mono<Void> handleCommandError(Command<MessagePush> command) {
         log.log(Level.INFO, "Command received: {0} -> {1}", new Object[]{command.getName(), command.getData()});
-        //return Mono.error(new Throwable("Error in command"));
-        return Mono.empty();
+        return Mono.error(new Throwable("Error in command"));
+//        return Mono.empty();
     }
 
 }

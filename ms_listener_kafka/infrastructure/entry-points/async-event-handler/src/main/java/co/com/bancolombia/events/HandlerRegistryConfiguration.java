@@ -12,12 +12,12 @@ import org.springframework.context.annotation.Configuration;
 public class HandlerRegistryConfiguration {
 
     @Bean
-    public HandlerRegistry handlerRegistry(EventsHandler events) {
+    public HandlerRegistry handlerRegistry(EventsHandler events, CommandsHandler commands) {
         return HandlerRegistry.register()
-                .listenEvent("event.push", events::handleEventA, MessagePush.class);
-//                .handleCommand("command.push", commands::handleCommandA, MessagePush.class)
-//                .handleCommand("command.push.error", commands::handleCommandError, MessagePush.class)
-//                .handleCloudEventCommand("command.push.cloud", commands::handleCloudCommand)
+                .listenEvent("event.push", events::handleEventA, MessagePush.class)
+                .handleCommand("command.push", commands::handleCommandA, MessagePush.class)
+                .handleCommand("command.push.error", commands::handleCommandError, MessagePush.class)
+                .handleCloudEventCommand("command.push.cloud", commands::handleCloudCommand);
 //                .serveQuery("query.push", queries::handleQueryA, MessagePush.class);
     }
 }

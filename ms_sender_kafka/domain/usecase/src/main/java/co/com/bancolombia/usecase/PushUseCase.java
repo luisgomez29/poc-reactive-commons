@@ -1,6 +1,7 @@
 package co.com.bancolombia.usecase;
 
 
+import co.com.bancolombia.model.events.gateways.CommandsGateway;
 import co.com.bancolombia.model.events.gateways.EventsGateway;
 import co.com.bancolombia.model.push.MessagePush;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class PushUseCase {
 
+    private final CommandsGateway commandsGateway;
     private final EventsGateway eventsGateway;
 
 //    public Mono<Void> sendPush(String replyID, String correlationID, MessagePush messagePush) {
@@ -16,8 +18,10 @@ public class PushUseCase {
 //    }
 
     public Mono<MessagePush> sendPush(MessagePush messagePush) {
-        return eventsGateway.emit(messagePush)
-                .thenReturn(messagePush);
+       return commandsGateway.sendPush(messagePush)
+                .flatMap(commandsGateway::sendPushWitError)
+                .flatMap(commandsGateway::sendPushCloud)
+                .flatMap(eventsGateway::emit);
     }
 
 }

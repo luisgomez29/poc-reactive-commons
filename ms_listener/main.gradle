@@ -44,6 +44,7 @@ subprojects {
         testCompileOnly  "org.projectlombok:lombok:${lombokVersion}"
         testAnnotationProcessor  "org.projectlombok:lombok:${lombokVersion}"
         implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+        pitest 'org.pitest:pitest-history-plugin:0.0.1'
     }
 
     //TODO: Remove
@@ -140,7 +141,7 @@ pitestReportAggregate {
 }
 
 tasks.named('wrapper') {
-    gradleVersion = '9.4.1'
+    gradleVersion = '9.4.0'
     distributionSha256Sum = "2ab2958f2a1e51120c326cad6f385153bb11ee93b3c216c5fccebfdfbb7ec6cb"
     validateDistributionUrl = true
 }
