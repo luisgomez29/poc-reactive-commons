@@ -23,7 +23,7 @@ import java.util.logging.Level;
 @RequiredArgsConstructor
 @EnableDirectAsyncGateway
 public class ReactiveDirectAsyncGateway implements CommandsGateway {
-    public static final String TARGET_NAME = "ms_listener";
+    public static final String TARGET_NAME = "ms_listener_kafka";
     public static final String SOME_COMMAND_NAME = "command.push";
     public static final String SOME_COMMAND_ERROR_NAME = "command.push.error";
     public static final String SOME_QUERY_NAME = "query.push";

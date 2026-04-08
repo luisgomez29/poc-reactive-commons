@@ -7,7 +7,7 @@ spring:
   webflux:
     base-path: "/api/v1/listener"
   application:
-    name: ms_listener
+    name: ms_listener_kafka
   devtools:
     add-properties: false
 
